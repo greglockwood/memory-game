@@ -1,3 +1,5 @@
+import { motion } from 'framer-motion';
+import type { MotionProps } from 'framer-motion';
 import React from "react";
 import styled from "styled-components";
 
@@ -9,7 +11,7 @@ interface _TileProps extends TileModel {
 
 type TileProps = React.PropsWithChildren<_TileProps>;
 
-const BaseTile = styled.div`
+const BaseTile = styled(motion.div)`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -30,16 +32,15 @@ const RemovedTile = styled(BaseTile)`
   visibility: hidden;
 `;
 
-function Tile(props: TileProps) {
+function Tile(props: TileProps & MotionProps) {
   const { children, ...otherProps } = props;
   switch (props.state) {
     case TileState.Removed:
       return <RemovedTile {...otherProps}>{children}</RemovedTile>;
     case TileState.FaceUp:
       return <FaceUpTile {...otherProps}>{children}</FaceUpTile>;
-    default:
-      return <FaceDownTile {...otherProps}>{children}</FaceDownTile>;
   }
+  return <FaceDownTile {...otherProps}>{children}</FaceDownTile>;
 }
 
 const Symbol = styled.span`
@@ -51,7 +52,11 @@ const Symbol = styled.span`
 export default function TileComponent(props: TileProps) {
   const { symbol, onClick } = props;
   return (
-    <Tile {...props} onClick={onClick}>
+    <Tile {...props} onClick={onClick} animate={{rotateZ: 180}} transition={{
+        repeat: 1,
+        repeatType: 'reverse',
+        duration: 2
+    }}>
       <Symbol {...props}>{symbol}</Symbol>
     </Tile>
   );
