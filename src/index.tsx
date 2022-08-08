@@ -6,7 +6,7 @@ import { store } from "./app/store";
 
 import App from "./App";
 
-const rootElement = document.getElementById("root");
+const rootElement: HTMLElement = document.getElementById("root") ?? document.createElement('div');
 const root = ReactDOMClient.createRoot(rootElement);
 
 root.render(

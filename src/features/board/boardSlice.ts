@@ -1,9 +1,9 @@
 import { isEqual } from "lodash-es";
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import type { WritableDraft } from "immer";
+import type { Draft } from "immer";
 
-import { Coords, TileState } from "../../types";
+import { Coords, Tile, TileState } from "../../types";
 import buildBoard from "./buildBoard";
 import type { BoardState } from "./model";
 
@@ -13,10 +13,10 @@ function getTile(state: BoardState, { row, col }: Coords): Tile {
   return state.tiles[row][col];
 }
 
-function _checkAndRemove(state: WritableDraft<BoardState>) {
+function _checkAndRemove(state: Draft<BoardState>) {
   if (state.flipped.length < 2) return state;
-  const firstTile = getTile(state, state.flipped[0]!);
-  const secondTile = getTile(state, state.flipped[1]!);
+  const firstTile = getTile(state, state.flipped[0]);
+  const secondTile = getTile(state, state.flipped[1]);
   state.flipped = [];
   state.turns++;
   if (firstTile.symbol === secondTile.symbol) {
@@ -33,7 +33,7 @@ export const boardSlice = createSlice({
   reducers: {
     flip: (state, action: PayloadAction<Coords>) => {
       if (state.timerId && state.flipped.length === 2) {
-        clearTimeout(state.timerId);
+        window.clearTimeout(state.timerId);
         state = _checkAndRemove(state);
         delete state.timerId;
       }

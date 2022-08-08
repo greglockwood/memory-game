@@ -75,7 +75,7 @@ export default function App() {
   const onTileClick = useCallback(
     (coords: Coords) => {
       dispatch(flip(coords));
-      const reset = setTimeout(() => {
+      const reset = window.setTimeout(() => {
         if (flipped.length === 1) {
           dispatch(checkAndRemove());
         }
